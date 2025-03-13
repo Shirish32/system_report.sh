@@ -4,7 +4,7 @@
 
 
 USERNAME=$(whoami)
-DATE_TIME=$(date | awk '{print $1, $2, $3}')
+DATE_TIME=$(date | awk '{print $1, $2, $3, $4}')
 
 
 HOSTNAME=$(hostname)
@@ -12,11 +12,11 @@ DISTRO=$(lsb_release -d | awk -F'\t' '{print $2}')
 UPTIME=$(uptime -p)
 
 CPU=$(lshw -class processor | grep "product:" | awk -F': ' '{print $2}' | head -n 1)
-RAM=$(cat /proc/meminfo | awk -F '{/MemTotal/ {print $2 , $3}')
+RAM=$(awk '/MemTotal/ {printf "%.2f GB\n" ,$2 /1024 /1024}' /proc/meminfo)
 DISKS=$(lsblk -d -o NAME,SIZE,MODEL | grep -v "NAME")
 VIDEO=$(lspci | grep -i vga | awk -F: '{print $2}' | sed 's/^ //')
 
-FQDN=$(hostname -f)
+/FQDN=$(hostname -f)
 IP_ADDRESS=$(ip a | grep 'inet ' | grep -v '127.0.0.1' | awk '{print $2}' | cut -d/ -f1)
 GATEWAY_IP=$(ip r | grep default | awk '{print $3}')
 DNS_SERVER=$(cat /etc/resolv.conf | grep nameserver | awk '{print $2}' )
